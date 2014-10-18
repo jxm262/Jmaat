@@ -53,12 +53,22 @@
 			
   				</div>
   				<div class="col-md-4">
-  				<h1> </h1>
-                            <ul class="list-unstyled pull-right-md">
-                                <li><i class="fa fa-map-marker"></i><span class="sr-only">Location:</span>&nbsp;&nbsp;&nbsp;Columbus, OH, US</li>
-                                <li><i class="fa fa-envelope-o"></i><span class="sr-only">Email:</span><a href="#">&nbsp;&nbsp;jxm262@@gmail.com</a></li>
-                                <li><i class="fa fa-link"></i><span class="sr-only">Website:</span><a href="#">&nbsp;&nbsp;jmaat.me</a></li>
-                            </ul>
+  					<h1> </h1>
+  					<div class="col-md-offset-5 col-md-7">
+					<ul class="list-unstyled">
+						<li><i class="fa fa-map-marker"></i><span class="sr-only">Location:</span>&nbsp;&nbsp;&nbsp;Columbus, OH, US</li>
+						<li><i class="fa fa-envelope-o"></i><span class="sr-only">Email:</span><a href="#">&nbsp;&nbsp;jxm262@@gmail.com</a></li>
+						<li><i class="fa fa-link"></i><span class="sr-only">Website:</span><a href="#">&nbsp;&nbsp;jmaat.me</a></li>
+					</ul>
+					</div>
+					
+					<div  style="margin-top: 20px; margin-bottom: 5px" class="col-md-offset-3 col-md-9" id="cube">
+					</div>
+						<div  class="col-md-offset-5 col-md-7">
+						<p>
+							<strong>Hello Cube !</strong>
+							</p>
+					</div>
   				</div>
   
 			</div>
@@ -113,8 +123,6 @@
      					<ul>
     						<li><a href="http://jmaat.me/hn"><strong>Hacker News Styler</strong></a><br>&nbsp;&nbsp;&nbsp;<small>However, they just came out with <a href="http://blog.ycombinator.com/hacker-news-api">a new API</a></small></li>
   							<li><a href="http://jmaat.me/2048-Scala"><strong>2048 in Scala</strong></a></li>
-  							<li>PL/SQL</li>
-  							<li>HTML5/CSS
 						</ul>
   					</div>
 				</div>
@@ -134,6 +142,46 @@
 </body>
 	<script src="@routes.Assets.at("javascripts/libs/jquery-1.11.1.min.js")" type="text/javascript"></script>
 	<script src="@routes.Assets.at("javascripts/libs/bootstrap.min.js")" type="text/javascript"></script>
+	<script src="@routes.Assets.at("javascripts/libs/three.min.js")" type="text/javascript"></script>
 	<script src="@routes.Assets.at("javascripts/app.js")" type="text/javascript"></script>
+	
+		<script>
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera(25, window.innerWidth/window.innerHeight, 0.1, 1000);
+			camera.position.x = 0;
+			/* To make transparent background 
+				alpha: true
+				set to color clear
+			*/ 
+			
+			var renderer = new THREE.WebGLRenderer({ alpha: true });
+			renderer.setClearColor( 0x000000, 0 );
+			
+			var total = window.innerWidth + window.innerHeight;
+			var widthProport = window.innerWidth / total;
+			var heightProport = window.innerHeight / total;
+			
+			renderer.setSize(300 * widthProport, 300 * heightProport);
+			window.j = renderer.domElement;
+			document.getElementById("cube").appendChild(renderer.domElement);
+
+			var geometry = new THREE.BoxGeometry(1,1,1);
+			var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+			var cube = new THREE.Mesh(geometry, material);
+			scene.add(cube);
+
+			camera.position.z = 5;
+
+			var render = function () {
+				requestAnimationFrame(render);
+
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+
+				renderer.render(scene, camera);
+			};
+
+			render();
+		</script>	
 </html> 
 

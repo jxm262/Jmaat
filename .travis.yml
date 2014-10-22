@@ -1,4 +1,12 @@
-language: scala
+- language: scala
+-sbt_args: -sbt-version 0.13.0
+- scala:
+-   - 2.11.0
+-jdk:
+-   - oraclejdk7
+-   - openjdk7
+-   - openjdk6
+
 before_install:
 - openssl aes-256-cbc -K $encrypted_842bb9ce456b_key -iv $encrypted_842bb9ce456b_iv
   -in justinkey.pem.enc -out justinkey.pem -d

@@ -1,4 +1,6 @@
-This is your new Play application
+[![Build Status](https://travis-ci.org/jxm262/Jmaat.svg?branch=master)](https://travis-ci.org/jxm262/Jmaat)
+
+My Homepage
 =====================================
 
-This file will be packaged with your application, when using `play dist`.
+This project contains all my code for [jmaat.me](http://jmaat.me)

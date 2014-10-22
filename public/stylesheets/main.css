@@ -1,11 +1,11 @@
 /**Main Css Page*/
 
-
 .header {
 	padding-top: 25px;
 	padding-bottom: 25px;
 	margin-bottom: 10px;
-	background-color: #F1F1F1;
+	background-color: #2d2724;
+	color: #f2f1ed;
 }
 
 /*pull right on md cols */
@@ -19,14 +19,14 @@
 	margin-bottom: 50px
 }
 
-
-
-
-
 html, body {
   height: 100%;
   /* The html and body elements cannot have any padding or margin. */
 }
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
 
 /* Wrapper for page content to push down footer */
 #wrap {
@@ -41,16 +41,11 @@ html, body {
 /* Set the fixed height of the footer here */
 .footer {
   height: 60px;
-  background-color: #F1F1F1;
+  background-color: #2d2724;
+  color: #f2f1ed;
 }
 
 .footer-container {
 	margin-top: 15px;
 }
-
-
-/* Sticky footer styles
--------------------------------------------------- */
-
-
 

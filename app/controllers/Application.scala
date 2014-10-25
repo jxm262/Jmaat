@@ -8,7 +8,7 @@ import play.api.http.MimeTypes
 object Application extends Controller {
 
   def index = Action {
-    Ok(views.html.Index())
+    Ok(views.html.index())
   }
 
 }

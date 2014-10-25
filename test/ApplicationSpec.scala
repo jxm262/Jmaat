@@ -26,7 +26,7 @@ class ApplicationSpec extends Specification {
       contentType(home) must beSome.which(_ == "text/html")
       
       //spot test the title shows
-      contentAsString(home) must contain ("JMAAT")
+      contentAsString(home) must contain ("Justin Maat")
     }
   }
 }

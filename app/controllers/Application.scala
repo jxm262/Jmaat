@@ -10,5 +10,9 @@ object Application extends Controller {
   def index = Action {
     Ok(views.html.index())
   }
+  
+  def code(name: String) = Action {
+	  Ok(views.html.java())
+  }
 
 }

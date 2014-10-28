@@ -1,11 +1,8 @@
-(function() {
 	//TODO: move to react framework
-	$.get('/posting/all', function(postings) {
+	var postingsPromise = $.get('/posting/all', function(postings) {
 		postings[0].forEach(function(el, idx) {
 			$('#code_links').append(
-					$("<li class='list-group-item'><a href='/code/"
-							+ el.posting_id + "' class='al'><strong>"
-							+ el.title + "</strong></a></li>"));
+					$("<li class='list-group-item'><a href='/code/"+ el.postingId + "' class='al' id='" + el.postingId + "'><strong>"+ el.title + "</strong></a></li>"));
 		});
 	});
 
@@ -15,4 +12,3 @@
 	}, function(e) {
 		$(this).css('background-color', 'white');
 	});
-})();

@@ -1,5 +1,18 @@
 //(function() {
-	
+
+	postingsPromise.done(function(){
+		$(".al").click(function(e){
+			event.preventDefault();
+			var postingId = $(this).attr("id");
+			
+			$.get("/../posting/" + postingId, function(obj){
+				$("#posting_id").val(obj[0][0].postingId);
+				$("#title").val(obj[0][0].title);
+				$("#text").val(obj[0][0].text);
+			});
+		});
+	});
+
 	$("#submit").click(function(event){
 		event.preventDefault();
 		
@@ -29,5 +42,6 @@
 			}
 		});
 	});
+	
 	
 //})();

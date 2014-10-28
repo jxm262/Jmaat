@@ -10,6 +10,7 @@ import reactivemongo.api._
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.collection.JSONCollection
 import models.Posting
+import reactivemongo.bson.BSONDocument
 
 object AdminController extends Controller with MongoController {
 
@@ -17,11 +18,6 @@ object AdminController extends Controller with MongoController {
 
   def collection: JSONCollection = db.collection[JSONCollection]("persons")
 
-//      val cursor: Cursor[JsObject] = collection.find(Json.obj("postingId" -> postingId)).cursor[JsObject]
-//    val futurePersonsList: Future[List[JsObject]] = cursor.collect[List]()
-//    val futurePersonsJsonArray: Future[JsArray] = futurePersonsList.map(postings => Json.arr(postings))
-//    
-//    futurePersonsJsonArray.map(postings => Ok(postings))
     
 //  def code(postingId: String) = Action.async { implicit request =>
 //    collection.find(Json.obj("postingId" -> postingId)).cursor[Posting]
@@ -47,9 +43,12 @@ object AdminController extends Controller with MongoController {
   }
   
   def save = Action.async(parse.json) { implicit request =>
-    Json.fromJson[Posting](request.body).fold(
+  	Json.fromJson[Posting](request.body).fold(
       invalid => Future.successful(BadRequest("Bad message form")),
-      valid => collection.insert(request.body).map(lastError => Ok(Json.obj("success" -> true))))
+      valid => {
+        println("valid: " + valid.postingId)
+        collection.update(Json.obj("postingId" -> valid.postingId), request.body, upsert = true).map(lastError => Ok(Json.obj("success" -> true)))
+      })
   }
   
   def findAllPostings = Action.async {
@@ -67,7 +66,7 @@ object AdminController extends Controller with MongoController {
     
     futurePersonsJsonArray.map(postings => Ok(postings))
   }
-
+  
   /**
    * To map other fields manually, use an explicit read like below, but can use case class instead of tuple
    */

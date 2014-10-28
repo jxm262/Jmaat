@@ -17,7 +17,6 @@ object AdminController extends Controller with MongoController {
   implicit val postingReads = Json.reads[Posting]
 
   def collection: JSONCollection = db.collection[JSONCollection]("persons")
-
     
 //  def code(postingId: String) = Action.async { implicit request =>
 //    collection.find(Json.obj("postingId" -> postingId)).cursor[Posting]
@@ -41,14 +40,19 @@ object AdminController extends Controller with MongoController {
           BadRequest(e.getMessage())
       }
   }
-  
-  def save = Action.async(parse.json) { implicit request =>
-  	Json.fromJson[Posting](request.body).fold(
+
+  def delete = Action.async(parse.json) { implicit request =>
+    Json.fromJson[Posting](request.body).fold(
       invalid => Future.successful(BadRequest("Bad message form")),
-      valid => {
-        println("valid: " + valid.postingId)
-        collection.update(Json.obj("postingId" -> valid.postingId), request.body, upsert = true).map(lastError => Ok(Json.obj("success" -> true)))
-      })
+      valid => collection.remove(Json.obj("postingId" -> valid.postingId)).map(lastError => Ok(Json.obj("success" -> true)))
+    )
+  }
+
+  def save = Action.async(parse.json) { implicit request =>
+    Json.fromJson[Posting](request.body).fold(
+      invalid => Future.successful(BadRequest("Bad message form")),
+      valid => collection.update(Json.obj("postingId" -> valid.postingId), request.body, upsert = true).map(lastError => Ok(Json.obj("success" -> true)))
+    )
   }
   
   def findAllPostings = Action.async {

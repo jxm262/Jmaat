@@ -4,6 +4,7 @@
 
 # Home page
 GET    /                     controllers.Application.index
+GET    /code/*postingId      controllers.Application.code(postingId)
 GET    /admin                controllers.AdminController.index
 POST   /posting/save         controllers.AdminController.save
 GET    /posting/all          controllers.AdminController.findAllPostings

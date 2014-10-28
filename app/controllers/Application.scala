@@ -14,5 +14,8 @@ object Application extends Controller {
     Ok(views.html.index())
   }
   
+  def code(postingId: String) = Action {
+    Ok(views.html.code())
+  }
     
 }

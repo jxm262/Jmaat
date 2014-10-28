@@ -17,21 +17,17 @@
       <div class="panel-heading">
          <h3 class="panel-title">Code Snippets and Such</h3>
       </div>
-      <ul class="list-group">
-         <li class="list-group-item"><a href="/code/java" class="al"><strong>Java</strong></a></li>
-         <li class="list-group-item"><a href="#" class="al"><strong>JavaScript</strong></a></li>
-         <li class="list-group-item"><a href="#" class="al"><strong>Scala</strong></a></li>
-         <li class="list-group-item"><a href="#" class="al"><strong>Play!</strong></a></li>
-         <li class="list-group-item"><a href="#" class="al"><strong>EC2</strong></a></li>
-         <li class="list-group-item"><a href="#" class="al"><strong>PLSQL</strong></a></li>
-         <li class="list-group-item"><a href="#" class="al"><strong>DesignPatterns</strong></a></li>
-         <li class="list-group-item"><a href="#" class="al"><strong>DataStructures</strong></a></li>
+      <ul class="list-group" id="code_links">
       </ul>
    </div>
 </div>
 }
 
-@main(sidebar) {
+@javascripts = {
+	<script src="@routes.Assets.at("javascripts/threedemo.js")" type="text/javascript"></script>
+}
+
+@main(sidebar)(javascripts) {
 <div class="col-xs-8 col-md-7">
    <div class="posting">
       <h1>I Am</h1>

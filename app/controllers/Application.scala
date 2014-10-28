@@ -4,6 +4,9 @@ import play.api._
 import play.api.mvc._
 import play.api.mvc.{Action, Controller}
 import play.api.http.MimeTypes
+import models.Posting
+import models.Posting
+import models.Posting
 
 object Application extends Controller {
 
@@ -11,8 +14,5 @@ object Application extends Controller {
     Ok(views.html.index())
   }
   
-  def code(name: String) = Action {
-	  Ok(views.html.java())
-  }
-
+    
 }

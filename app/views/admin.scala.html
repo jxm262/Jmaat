@@ -1,0 +1,47 @@
+@sidebar = {
+<div class="col-xs-4 col-md-offset-1 col-md-4">
+   <h1></h1> <!-- just using for alignment -->
+   <div class="panel panel-primary">
+      <div class="panel-heading">
+         <h3 class="panel-title">Code Snippets and Such</h3>
+      </div>
+      <ul class="list-group" id="code_links">
+      </ul>
+   </div>
+</div>
+}
+
+@javascripts = {
+	<script src="@routes.Assets.at("javascripts/admin.js")"></script>
+}
+
+@main(sidebar)(javascripts){
+<div class="col-xs-8 col-md-7">
+   <h1> </h1> <!-- Just used for formatting alignment -->
+   <form class="form-horizontal" role="form">
+      <div class="form-group">
+         <label for="posting_id" class="col-sm-2 control-label">Posting Id</label>
+         <div class="col-sm-10">
+            <input type="text" class="form-control" id="posting_id">
+         </div>
+      </div>
+      <div class="form-group">
+         <label for="title" class="col-sm-2 control-label">Title</label>
+         <div class="col-sm-10">
+            <input type="text" class="form-control" id="title">
+         </div>
+      </div>
+      <div class="form-group">
+         <label for="text" class="col-sm-2 control-label">Text</label>
+         <div class="col-sm-10">
+         	<textarea class="form-control" rows="3" id="text"></textarea>
+         </div>
+      </div>
+      <div class="form-group">
+         <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+         </div>
+      </div>
+   </form>
+</div>
+}

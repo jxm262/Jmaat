@@ -218,13 +218,14 @@ var PostingForm = React.createClass({
 	handleSubmit: function(e) {
 		e.preventDefault();
 		var postingId = this.refs.postingId.getDOMNode().value.trim();
+		var title = this.refs.title.getDOMNode().value.trim();
 		var text = this.refs.text.getDOMNode().value.trim();
 
-		if (!text || !postingId) {
+		if (!text || !title || !postingId) {
 			return;
 		}
 		
-		this.props.onPostingSubmit({"postingId": postingId, "title": postingId, "text": text});		//read up on when to use props vs state
+		this.props.onPostingSubmit({"postingId": postingId, "title": title, "text": text});		//read up on when to use props vs state
 		this.refs.postingId.getDOMNode().value = '';
 		this.refs.text.getDOMNode().value = '';
 		this.refs.title.getDOMNode().value = '';

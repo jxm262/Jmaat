@@ -3,13 +3,18 @@
 # ~~~~
 
 # Home page
-GET    /                     controllers.Application.index
-GET    /code/*postingId      controllers.Application.code(postingId)
-GET    /admin                controllers.AdminController.index
+GET    /                     controllers.Application.index()
+GET    /posting/*postingId	         controllers.AdminController.index(postingId)
+GET    /admin                controllers.AdminController.admin
+
 POST   /posting/save         controllers.AdminController.save
-GET    /posting/all          controllers.AdminController.findAllPostings
-GET    /posting/*postingId   controllers.AdminController.findPostingById(postingId)
 POST   /posting/delete       controllers.AdminController.delete
+
+POST   /api/posting/save         controllers.AdminController.save
+GET    /api/posting/all          controllers.AdminController.findAllPostings
+GET    /api/posting/*postingId   controllers.AdminController.findPostingById(postingId)
+POST   /api/posting/delete       controllers.AdminController.delete
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file         controllers.Assets.at(path="/public", file)

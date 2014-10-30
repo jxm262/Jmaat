@@ -17,20 +17,24 @@ object AdminController extends Controller with MongoController {
   implicit val postingReads = Json.reads[Posting]
 
   def collection: JSONCollection = db.collection[JSONCollection]("persons")
-    
-//  def code(postingId: String) = Action.async { implicit request =>
-//    collection.find(Json.obj("postingId" -> postingId)).cursor[Posting]
-//      .collect[List]().map {
-//        posting => Ok(views.html.admin(postings))
-//      }.recover {
-//        case e =>
-//          e.printStackTrace()
-//          BadRequest(e.getMessage())
-//      }
-//  }
+
+  //  def code(postingId: String) = Action.async { implicit request =>
+  //    collection.find(Json.obj("postingId" -> postingId)).cursor[Posting]
+  //      .collect[List]().map {
+  //        posting => Ok(views.html.admin(postings))
+  //      }.recover {
+  //        case e =>
+  //          e.printStackTrace()
+  //          BadRequest(e.getMessage())
+  //      }
+  //  }
+
+  def index(postingId: String) = Action {
+    Ok(views.html.index())
+  }
   
   //TODO: refactor this somehow?  Or is this clean?
-  def index = Action.async { implicit request =>
+  def admin = Action.async { implicit request =>
     collection.find(Json.obj()).cursor[Posting]
       .collect[List]().map {
         postings => Ok(views.html.admin())
@@ -39,7 +43,7 @@ object AdminController extends Controller with MongoController {
           e.printStackTrace()
           BadRequest(e.getMessage())
       }
-  }
+  }  
 
   def delete = Action.async(parse.json) { implicit request =>
     Json.fromJson[Posting](request.body).fold(

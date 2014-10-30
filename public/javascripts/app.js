@@ -1,8 +1,20 @@
 /** @jsx React.DOM */
-var HomeBox = React.createClass({
+var PostingBox = React.createClass({
 	loadPostingsFromServer: function(){
 		$.ajax({
-			url: "/posting/java_design_patterns",  //this.props.url,
+			url: this.state.url,
+			dataType: 'json',
+			success: function(data) {
+				this.setState({data: data[0][0]});
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
+		});
+	},
+	loadLinksFromServer: function(){
+		$.ajax({
+			url: "/api/posting/all",  //this.props.url,
 			dataType: 'json',
 			success: function(data) {
 				this.setState({data: data[0]});
@@ -12,24 +24,76 @@ var HomeBox = React.createClass({
 			}.bind(this)
 		});
 	},
-//	handlePostingSubmit: function(posting) {
-//		//shortcut to quickly update ui without waiting for ajax (its duplicated in callback anyway)
-//		var newPostings = this.state.data.concat(posting);
-//		this.setState({data: newPostings});
-//		$.ajax({
-//			url: "../posting/save",
-//			dataType: 'json',
-//			contentType: 'application/json; charset=utf-8',
-//			type: 'POST',
-//			data: JSON.stringify(posting),
-//			success: function(data) {
-//				this.setState({data: newPostings});
-//			}.bind(this),
-//			error: function(xhr, status, err) {
-//				console.error(this.props.url, status, err.toString());
-//			}.bind(this)
-//		});
-//	},	
+	handleLinkClick: function(){
+		return;
+	},
+	getInitialState: function() {
+		return {data: [], url: "/api/posting/" + document.URL.split("/")[4]};
+	},
+	componentDidMount: function() {
+		this.loadPostingsFromServer();
+	},		  
+	render: function() {
+		return (
+			<div className="postingBox">
+				<PostingElem data={this.state.data}/>
+				<div className="col-xs-4 col-md-offset-1 col-md-4">
+					<h1></h1>
+					<div className="panel panel-primary">
+						<div className="panel-heading">
+							<h3 className="panel-title">Code Snippets and Such</h3>
+						</div>
+						<div className="panel-body">
+							<PostingList linkClickHandler={this.handleLinkClick}/>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+});
+
+var AdminBox = React.createClass({
+	loadPostingsFromServer: function(){
+		$.ajax({
+			url: "/api/posting/all",  //this.props.url,
+			dataType: 'json',
+			success: function(data) {
+				this.setState({data: data[0]});
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
+		});
+	},
+	handlePostingSubmit: function(posting) {
+		//shortcut to quickly update ui without waiting for ajax (its duplicated in callback anyway)
+		var newPostings = this.state.data.concat(posting);
+		this.setState({data: newPostings});
+	    $.ajax({
+	        url: "../api/posting/save",
+	        dataType: 'json',
+	        contentType: 'application/json; charset=utf-8',
+	        type: 'POST',
+	        data: JSON.stringify(posting),
+	        success: function(data) {
+				this.setState({data: newPostings});
+	        }.bind(this),
+	        error: function(xhr, status, err) {
+	          console.error(this.props.url, status, err.toString());
+	        }.bind(this)
+	      });
+	},
+	handleLinkClick: function(e, postingId){
+		e.preventDefault();
+		
+		$.get("../api/posting/" + postingId, function(el){
+			var posting = el[0][0];
+			$("#postingId").val(posting.postingId);
+			$("#title").val(posting.title);
+			$("#text").val(posting.text);
+		});
+	},
 	getInitialState: function() {
 		return {data: []};
 	},
@@ -38,7 +102,46 @@ var HomeBox = React.createClass({
 	},		  
 	render: function() {
 		return (
-			<div className="adminBox">
+			<div className="admingBox">
+				<PostingForm onPostingSubmit={this.handlePostingSubmit}/>
+				<div className="col-xs-4 col-md-offset-1 col-md-4">
+					<h1></h1>
+					<div className="panel panel-primary">
+						<div className="panel-heading">
+							<h3 className="panel-title">Code Snippets and Such</h3>
+						</div>
+						<div className="panel-body">
+							<PostingList data={this.state.data} linkClickHandler={this.handleLinkClick}/>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+});
+
+var HomeBox = React.createClass({
+	loadPostingsFromServer: function(){
+		$.ajax({
+			url: "/api/posting/java_design_patterns",  //this.props.url,
+			dataType: 'json',
+			success: function(data) {
+				this.setState({data: data[0]});
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
+		});
+	},
+	getInitialState: function() {
+		return {data: []};
+	},
+	componentDidMount: function() {
+		this.loadPostingsFromServer();
+	},		  
+	render: function() {
+		return (
+			<div className="postingBox">
 				<Posting data={this.state.data}/>
 				
 				<div className="col-xs-4 col-md-offset-1 col-md-4">
@@ -57,6 +160,60 @@ var HomeBox = React.createClass({
 	}
 });
 
+var PostingElem = React.createClass({
+	render: function() {
+		return (
+			<div className="col-xs-8 col-md-7">
+				<div class="posting">				
+					<h1>{this.props.data.title}</h1>
+					{this.props.data.text}
+					<h4><small><i className="fa fa-calendar"></i> Oct 23, 2014</small></h4>
+				</div>
+	        </div>
+		);
+	}
+});
+
+var PostingList = React.createClass({
+	loadLinksFromServer: function(){
+		$.ajax({
+			url: "/api/posting/all",  //this.props.url,
+			dataType: 'json',
+			success: function(data) {
+				this.setState({data: data[0]});
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
+		});
+	},	
+	getInitialState: function() {
+		return {data: []};
+	},
+	componentDidMount: function() {
+		this.loadLinksFromServer();
+	},		
+	render: function() {
+		
+		var that = this;	//I have a love-hate relationship with js.  This is one reason why i hate :)
+
+		var postingNodes = this.state.data.map(function (posting) {
+			return (
+				<ul>
+	        		<PostingLink title={posting.title} link={posting.postingId} linkClickHandler={that.props.linkClickHandler}>
+	        			{posting.text}
+	        		</PostingLink>
+	        	</ul>
+			);
+		});		
+		return (
+			<div className="postingList">
+		       	{postingNodes}
+		    </div>
+		);
+	}
+});
+
 var Posting = React.createClass({
 	render: function() {
 		return (
@@ -70,87 +227,15 @@ var Posting = React.createClass({
 	}
 });
 
-var AdminBox = React.createClass({
-	loadPostingsFromServer: function(){
-		$.ajax({
-			url: "/posting/all",  //this.props.url,
-			dataType: 'json',
-			success: function(data) {
-				this.setState({data: data[0]});
-			}.bind(this),
-			error: function(xhr, status, err) {
-				console.error(this.props.url, status, err.toString());
-			}.bind(this)
-		});
-	},
-	handlePostingSubmit: function(posting) {
-		//shortcut to quickly update ui without waiting for ajax (its duplicated in callback anyway)
-		var newPostings = this.state.data.concat(posting);
-		this.setState({data: newPostings});
-	    $.ajax({
-	        url: "../posting/save",
-	        dataType: 'json',
-	        contentType: 'application/json; charset=utf-8',
-	        type: 'POST',
-	        data: JSON.stringify(posting),
-	        success: function(data) {
-				this.setState({data: newPostings});
-	        }.bind(this),
-	        error: function(xhr, status, err) {
-	          console.error(this.props.url, status, err.toString());
-	        }.bind(this)
-	      });
-	},	
-	getInitialState: function() {
-		return {data: []};
-	},
-	componentDidMount: function() {
-		this.loadPostingsFromServer();
-	},		  
-	render: function() {
-		return (
-			<div className="admingBox">
-				<PostingForm onPostingSubmit={this.handlePostingSubmit}/>
-				<div className="col-xs-4 col-md-offset-1 col-md-4">
-					<h1></h1>
-					<div className="panel panel-primary">
-						<div className="panel-heading">
-							<h3 className="panel-title">Code Snippets and Such</h3>
-						</div>
-						<div className="panel-body">
-							<PostingList data={this.state.data} />
-						</div>
-					</div>
-				</div>
-			</div>
-		);
-	}
-});
-
-var PostingList = React.createClass({
-	render: function() {
-		var postingNodes = this.props.data.map(function (posting) {
-			return (
-				<ul>
-		        	<PostingLink title={posting.title}>
-		        		{posting.text}
-		        	</PostingLink>
-		        </ul>
-		      );
-		});
-		return (
-			<div className="postingList">
-		       	{postingNodes}
-		    </div>
-		);
-	}
-});
-
 var PostingLink = React.createClass({
+	handleLinkClick: function(e) {
+		this.props.linkClickHandler(e, this.props.link);
+		return;
+	},		
 	render: function() {
 		return (
 			<li>
-				<a href="#">
+				<a href={this.props.link} onClick={this.handleLinkClick}>
 					<strong>{this.props.title}</strong>
 				</a>
 			</li>
@@ -163,7 +248,7 @@ var PostingForm = React.createClass({
 		e.preventDefault();
 		var postingId = this.refs.postingId.getDOMNode().value.trim();
 		var text = this.refs.text.getDOMNode().value.trim();
-		
+
 		if (!text || !postingId) {
 			return;
 		}
@@ -171,6 +256,8 @@ var PostingForm = React.createClass({
 		this.props.onPostingSubmit({"postingId": postingId, "title": postingId, "text": text});		//read up on when to use props vs state
 		this.refs.postingId.getDOMNode().value = '';
 		this.refs.text.getDOMNode().value = '';
+		this.refs.title.getDOMNode().value = '';
+		
 		return;
 	},	
 	render: function() {
@@ -181,25 +268,26 @@ var PostingForm = React.createClass({
 					<div className="form-group">
 						<label for="posting_id" className="col-sm-2 control-label">Posting Id</label>
 						<div className="col-sm-10">
-							<input type="text" className="form-control" id="posting_id2" ref="postingId"/>
+							<input type="text" className="form-control" id="postingId" ref="postingId"/>
 						</div>
 					</div>
 					<div className="form-group">
 						<label for="title" className="col-sm-2 control-label">Title</label>
 						<div className="col-sm-10">
-							<input type="text" className="form-control" id="title2" ref="title"/>
+							<input type="text" className="form-control" id="title" ref="title"/>
 						</div>
 					</div>
 					<div className="form-group">
 						<label for="text" className="col-sm-2 control-label">Text</label>
 						<div className="col-sm-10">
-							<textarea className="form-control" rows="3" id="text2" ref="text"></textarea>
+							<textarea className="form-control" rows="3" id="text" ref="text"></textarea>
 						</div>
 					</div>
 					<div className="form-group">
 						<div className="col-sm-offset-2 col-sm-10">
-							<button type="submit" className="btn btn-primary" id="submit2" value="Post">Submit</button>
-							<button type="submit" className="btn btn-danger" id="delete2">Delete</button>
+							<button type="submit" className="btn btn-primary" id="submit" value="Post">Submit</button>
+							&nbsp;&nbsp;&nbsp;
+							<button type="submit" className="btn btn-danger" id="delete">Delete</button>
 						</div>
 					</div>					
 				</form>
@@ -207,8 +295,3 @@ var PostingForm = React.createClass({
 		);
 	}
 });
-
-React.renderComponent(
-    <AdminBox url="comments.json" />, 
-	document.getElementById('page')
-);

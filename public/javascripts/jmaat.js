@@ -1,7 +1,7 @@
 var Jmaat = Jmaat || {};
 
 // TODO: move this to react framework
-Jmaat.postingsPromise = $.get('/posting/all', function(postings) {
+Jmaat.postingsPromise = $.get('/api/posting/all', function(postings) {
 	postings[0].forEach(function(el, idx) {
 		$('#code_links').append(
 				$("<li class='list-group-item'><a href='/code/" + el.postingId + "' class='al' id='" + el.postingId + "'><strong>" + el.title + "</strong></a></li>"));

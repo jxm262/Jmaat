@@ -167,14 +167,18 @@ var PostingList = React.createClass({
 	}
 });
 
+var converter = new Showdown.converter();
+
 var PostingElem = React.createClass({
 	render: function() {
+		var text = (this.props.data.text == undefined) ? "" : this.props.data.text;
+		var rawMarkup = converter.makeHtml(text.toString());
+
 		return (
 			<div className="col-xs-8 col-md-7">
 				<div class="posting">				
 					<h1>{this.props.data.title}</h1>
-					{this.props.data.text}
-					<h4><small><i className="fa fa-calendar"></i> Oct 23, 2014</small></h4>
+						<span dangerouslySetInnerHTML={{__html: rawMarkup}} />
 				</div>
 	        </div>
 		);
@@ -225,6 +229,7 @@ var PostingForm = React.createClass({
 			return;
 		}
 		
+//		<h4><small><i className="fa fa-calendar"></i> Oct 23, 2014</small></h4>
 		this.props.onPostingSubmit({"postingId": postingId, "title": title, "text": text});		//read up on when to use props vs state
 		this.refs.postingId.getDOMNode().value = '';
 		this.refs.text.getDOMNode().value = '';
@@ -236,6 +241,7 @@ var PostingForm = React.createClass({
 		return (
 			<div className="col-xs-8 col-md-7">
 				<h1>Blog Postings Admin</h1>
+				<h1> </h1>
 				<form className="form-horizontal" role="form" onSubmit={this.handleSubmit}>
 					<div className="form-group">
 						<label for="posting_id" className="col-sm-2 control-label">Posting Id</label>
@@ -263,6 +269,10 @@ var PostingForm = React.createClass({
 						</div>
 					</div>					
 				</form>
+				<h1> </h1>
+				<div>
+				<a href='https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'>Markdown Cheat Sheet</a>  --  <a href='http://markdown-here.com/livedemo.html'>Markdown Verify</a>
+				</div>
 			</div>
 		);
 	}

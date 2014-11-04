@@ -1,7 +1,8 @@
+package controllers
+
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
-
 import play.api.test._
 import play.api.test.Helpers._
 
@@ -11,10 +12,8 @@ import play.api.test.Helpers._
  * For more information, consult the wiki.
  */
 @RunWith(classOf[JUnitRunner])
-class DBTest extends Specification {
+class ApplicationSpec extends Specification {
 
-  
-  
   "Application" should {
 
     "send 404 on a bad request" in new WithApplication{
@@ -22,13 +21,15 @@ class DBTest extends Specification {
     }
 
     "render the index page" in new WithApplication{
-      val home = route(FakeRequest(GET, "/")).get
-
-      status(home) must equalTo(OK)
-      contentType(home) must beSome.which(_ == "text/html")
-      
-      //spot test the title shows
-      contentAsString(home) must contain ("Justin Maat")
+      val indexResult = route(FakeRequest(GET, "/")).get
+      redirectLocation(indexResult) must beSome.which(_ == "/posting/Home")
     }
+
+    "render the posting page" in new WithApplication{
+      
+    	val postingResult = route(FakeRequest(GET, "/posting/Home")).get
+    	status(postingResult) must equalTo(OK)
+    }
+    
   }
 }
